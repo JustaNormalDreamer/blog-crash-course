@@ -33,6 +33,7 @@
                     @endforeach
 
                     <div class="load-more text-center my-2">
+                        {{ $posts->links() }}
                         <button class="btn btn-outline-primary btn-lg">Load More</button>
                     </div>
 

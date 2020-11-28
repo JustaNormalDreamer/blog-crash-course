@@ -65,13 +65,63 @@ class PostTest extends TestCase
      */
     public function test_it_returns_validation_error_for_title_stating_required()
     {
-        $this->post('/posts', array_merge($this->postData(), ['title' => '']))
-            ->assertSessionHasErrors(['title' => 'The title field is required.']);
+        $this->post('/posts', array_merge($this->postData(), ['post_title' => '']))
+            ->assertSessionHasErrors(['post_title' => 'The post title field is required.']);
 
         $this->assertDatabaseMissing('posts', [
             'id' => 1,
             'title' => '',
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function test_it_is_able_to_update_an_existing_post_from_a_resource_object()
+    {
+        $post = Post::factory()->create();
+
+        $this->put("/posts/{$post->id}", $this->postData())
+            ->assertStatus(302);
+
+        $this->assertDatabaseHas('posts', [
+           'id' => 1,
+            'title' => 'A new post has been created.',
+            'description' => 'This new post is being driven by tests.',
+            'status' => true
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function test_it_returns_create_view_for_post()
+    {
+        $this->get('/posts/create')
+            ->assertViewIs('blog.create');
+    }
+
+    /**
+     * @test
+     */
+    public function test_it_returns_edit_view_for_post()
+    {
+        $post = Post::factory()->create();
+
+        $this->get("/posts/{$post->id}/edit")
+            ->assertViewIs('blog.edit');
+    }
+
+    /**
+     * @test
+     */
+    public function test_it_is_able_to_delete_an_existing_post()
+    {
+        $post = Post::factory()->create();
+
+        $this->delete("/posts/{$post->id}")
+            ->assertStatus(302)
+            ->assertSessionHas('message', 'Post has been deleted.');
     }
 
 //    /**
@@ -91,9 +141,9 @@ class PostTest extends TestCase
     private function postData()
     {
         return [
-            'title' => 'A new post has been created.',
-            'description' => 'This new post is being driven by tests.',
-            'status' => true
+            'post_title' => 'A new post has been created.',
+            'post_description' => 'This new post is being driven by tests.',
+            'post_status' => true
         ];
     }
 }

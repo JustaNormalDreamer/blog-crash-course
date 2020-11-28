@@ -18,7 +18,15 @@
                         </ul>
                         <p>{{ $post->description }}</p>
                     </div>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-success">Edit</a>
 
+                    <form action="{{ route('posts.destroy', ['post' => $post->id]) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <input type="submit" class="btn btn-danger" value="Delete" />
+                    </form>
                 </div>
             </div>
         </div>

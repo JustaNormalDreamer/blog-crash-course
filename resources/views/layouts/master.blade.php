@@ -11,8 +11,14 @@
     <link rel="stylesheet" href="{{ asset('css/masonry.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owl.carousel.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        .invalid-feedback {
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    @include('components.alert')
     @yield('content')
 </body>
 </html>
